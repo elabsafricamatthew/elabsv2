@@ -77,10 +77,42 @@ h1 {
 
 h1 .heroDynamicTexts {
   color: #FF781F;
+  height: 4rem !important;
+  display: inline-block;
+  overflow: hidden;
 }
 
-h1 .heroDynamicTexts span {
-  display: none;
+.animationContainer {
+  display: inline-block;
+   animation: upDown 35s infinite ease-in-out;
+}
+
+h1 .animationContainer span {
+  display: block;
+}
+
+@keyframes upDown {
+  0% {
+    transform: translateY(0);
+  }
+  15% {
+    transform: translateY(-1em);
+  }
+  30% {
+    transform: translateY(-2em);
+  }
+  45% {
+    transform: translateY(-3em);
+  }
+  65% {
+    transform: translateY(-2em);
+  }
+  85% {
+    transform: translateY(-1em);
+  }
+   100% {
+    transform: translateY(0);
+  }
 }
 
 h2 {
@@ -681,13 +713,20 @@ input:hover, input:focus, textarea:hover, textarea:focus {
   cursor: pointer;
 }
 
-form div p.succesText, form div p.errorText {
+form div {
+    background: #16af16;
+}
+
+form div.error {
+  background: tomato;
+}
+
+form div p.successText, form div p.errorText {
   margin-top: 1rem;
   text-transform: unset;
   text-align: center;
   position: relative;
   padding: 0.3rem 0.8rem;
-    background: #16af16;
     color: #fff;
     border-radius: 3px;
     font-weight: 300 !important;
@@ -699,7 +738,6 @@ form div p.succesText, form div p.errorText {
 
 .contactForm .error p.errorText {
   display: block;
-  background: tomato;
   color: white;
 }
 
@@ -928,6 +966,16 @@ footer.container {
     .socialMediaWrapper div {
         margin: 0 0 0.6em !important;
     }
+
+    h1 .heroDynamicTexts {
+      height: 3.2rem !important;
+    }
+}
+
+@media (max-width: 999px) {
+h1 .heroDynamicTexts {
+  height: 2.8rem !important;
+}
 }
 
 @media (max-width: 530px) {
@@ -941,4 +989,7 @@ footer.container {
         width: 100%;
         text-align: center;
     }
+    h1 .heroDynamicTexts {
+  height: 2.6rem !important;
+}
 }

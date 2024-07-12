@@ -95,7 +95,8 @@
             <h1>
               We have helped businesses design and build products that <br />
               <span class="heroDynamicTexts">
-                  <span
+                  <span class="animationContainer">
+                    <span
                   >
                   are intuitive.
                   </span>
@@ -108,6 +109,7 @@
                   </span><span
                   >
                   generate sales.
+                  </span>
                   </span>
               </span>
             </h1>
@@ -447,6 +449,31 @@
         document.querySelector('header').classList.toggle('activeMobileNav')
       }))
 
+      const handleScrollToId = (id) => {
+    let domId = id ? id.toLowerCase() : "";
+
+    const dom = document.querySelector(`#${domId}`);
+
+    if (dom) {
+      setTimeout(() => {
+        window.scrollTo({
+          top: dom.offsetTop - 20,
+          behavior: "smooth",
+        });
+      }, 100);
+    }
+  };
+
+      // Scroll to section
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const strippedHref = ''
+
+        handleScrollToId(e.target.getAttribute('href').toLowerCase().replace(/#/g, ''))
+    });
+});
+
       // Animate heroSection
       setTimeout(() => {
         setTimeout(() => {
@@ -464,8 +491,18 @@
 
       // hide form submisson success message
       const apiMessageContainer = document.querySelector('form div')
-      const toggleSuccessMessage = (isVisible) => {
+      const successMessage = document.querySelector('.successText')
+      const errorMessage = document.querySelector('.errorText')
+      const toggleSuccessMessage = (isVisible, status) => {
         apiMessageContainer.style.display = isVisible ? 'block' : 'none';
+
+        if(status === 'success') {
+          successMessage.style.display = 'block';
+          errorMessage.style.display = 'none';
+        } else {
+          errorMessage.style.display = 'block';
+          successMessage.style.display = 'none';
+        }
       }
 
       //Auto horizontal scrolling 
@@ -493,33 +530,6 @@
 
 document.addEventListener('DOMContentLoaded', horizontalScroll);
 
-// Changing texts
-const cycleTexts = () => {
-  const children = document.querySelectorAll('.heroDynamicTexts span');
-  let currentIndex = 0;
-
-    const fadeNextChild = () => {
-    const currentChild = children[currentIndex];
-    const nextIndex = (currentIndex + 1) % children.length;
-    const nextChild = children[nextIndex];
-
-    currentChild.style.opacity = 1;
-    nextChild.style.opacity = 0;
-
-    const fadeInInterval = setInterval(() => {
-      currentChild.style.opacity -= 0.01;
-      nextChild.style.opacity = parseFloat(nextChild.style.opacity) + 0.01;
-      if (currentChild.style.opacity <= 0) {
-        clearInterval(fadeInInterval);
-        currentIndex = nextIndex;
-        setTimeout(fadeNextChild, 2000);
-      }
-    }, 20);
-  };
-}
-
-cycleTexts();
-
 //Form submission
 const contactUsForm = document.querySelector('#contact-us-form')
 const inputs = contactUsForm.querySelectorAll('input, textarea');
@@ -532,29 +542,37 @@ const submitBtn = document.querySelector('form button');
 contactUsForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(contactUsForm);
+      apiMessageContainer.classList.toggle('error')
   toggleSuccessMessage()
     submitBtn.classList.add('sending');
     submitBtn.disabled = true;
 
     fetch('https://formspree.io/f/mvoekrak', {
     method: 'POST',
+     mode: 'no-cors',
+  headers: {
+    'Content-Type': 'application/json'
+  },
     body: formData
 })
 .then(response => {
-    console.log(response);
-    if (response.ok) {
+    console.log({response});
+    if (response.type === 'opaque') {
         submitBtn.classList.remove('sending');
-        toggleSuccessMessage('show');
+        toggleSuccessMessage('show', 'success');
+      apiMessageContainer.classList.toggle('error')
         contactUsForm.reset();
     } else {
+      apiMessageContainer.classList.toggle('error')
         submitBtn.classList.remove('sending');
-        toggleSuccessMessage('show');
+        toggleSuccessMessage('show', 'error');
         apiMessageContainer.classList.add('error');
-        submitBtn.disabled = false;
     }
+    submitBtn.disabled = false;
+    return true;
 })
 .catch(error => {
-    console.error('Error:', error);
+    console.log('Error:', error);
 });
   });
     </script>
